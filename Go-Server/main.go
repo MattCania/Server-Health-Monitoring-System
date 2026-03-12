@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-server/routes"
 	"net/http"
 	"os"
 
@@ -10,18 +11,20 @@ import (
 )
 
 func main() {
+	r := gin.Default()
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Print("Error loading .env file")
 	}
-	r := gin.Default()
+	routes.AuthRoute(r)
 	port := os.Getenv("PORT")
-	fmt.Println(port)
+
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "API Monitor Running",
 		})
 	})
 
+	fmt.Println("Running on port: " + port)
 	r.Run(":" + port)
 }
